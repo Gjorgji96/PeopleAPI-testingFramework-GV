@@ -8,6 +8,7 @@ public class InitialTestFile {
     PeopleApiClient   peopleApiClient = new PeopleApiClient();
     HttpResponse response;
     HttpResponse getPeople;
+    HttpResponse getOnePerson;
 
 
     @Test
@@ -17,8 +18,11 @@ public class InitialTestFile {
         response = peopleApiClient.getWelcomeRequest();
 
         String body = EntityUtils.toString(response.getEntity());
-        getPeople = peopleApiClient.getPeopleRequest();
-        String peopleBody = EntityUtils.toString(response.getEntity());
+        getPeople = peopleApiClient.getAllPeople();
+        String peopleBody = EntityUtils.toString(getPeople.getEntity());
+
+        getOnePerson = peopleApiClient.getOnePerson();
+        String onePerson = EntityUtils.toString(getOnePerson.getEntity());
 
 
 
