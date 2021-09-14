@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -130,6 +131,44 @@ public class PeopleApiClient {
         response.setEntity(newEntity);
 
         return response;
+
+
+    }
+
+    public HttpResponse update () throws Exception {
+
+        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE,"application/json");
+
+        SSLContext sslContext = SSLContextBuilder
+                .create()
+                .loadTrustMaterial(new TrustSelfSignedStrategy())
+                .build();
+        HttpPut location = new HttpPut("https://people-api1.herokuapp.com/api/person/613f3cc8efc41e00046091c5");
+        JSONObject payLoadasObject = new JSONObject();
+        payLoadasObject.put("location","Oslo,Norway");
+
+        String payLoadasString = payLoadasObject.toString();
+
+        location.setHeader(contentType);
+        location.setEntity(new StringEntity(payLoadasObject.toString()));
+
+        HttpClient httpClient = HttpClients.custom().setSSLContext(sslContext).build();
+
+        HttpResponse response = httpClient.execute(location);
+
+        HttpEntity entityUpdate = response.getEntity();
+        String bodyPeople = EntityUtils.toString(entityUpdate);
+
+        HttpEntity newEntity = new StringEntity(bodyPeople, ContentType.get(entityUpdate));
+        response.setEntity(newEntity);
+
+        return response;
+
+
+
+
+
+
 
 
     }

@@ -9,6 +9,7 @@ public class InitialTestFile {
     HttpResponse response;
     HttpResponse getPeople;
     HttpResponse getOnePerson;
+    HttpResponse update;
 
 
     @Test
@@ -24,7 +25,8 @@ public class InitialTestFile {
         getOnePerson = peopleApiClient.getOnePerson();
         String onePerson = EntityUtils.toString(getOnePerson.getEntity());
 
-
+        update = peopleApiClient.update();
+        String location = EntityUtils.toString(update.getEntity());
 
     }
 }
