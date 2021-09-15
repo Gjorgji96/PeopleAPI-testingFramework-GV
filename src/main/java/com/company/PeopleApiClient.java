@@ -147,8 +147,6 @@ public class PeopleApiClient {
         JSONObject payLoadasObject = new JSONObject();
         payLoadasObject.put("location","Oslo,Norway");
 
-        String payLoadasString = payLoadasObject.toString();
-
         location.setHeader(contentType);
         location.setEntity(new StringEntity(payLoadasObject.toString()));
 
