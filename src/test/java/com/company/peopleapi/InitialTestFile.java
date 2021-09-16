@@ -12,48 +12,34 @@ public class InitialTestFile {
     HttpResponse getPeople;
     HttpResponse getOnePerson;
     HttpResponse update;
-
-
-    @Test
-    public void initialTest() throws Exception{
-        //nekakov REQUEST do PEOPLE API
-
-        response = peopleApiClient.getWelcomeRequest();
-
-        String body = EntityUtils.toString(response.getEntity());
-        getPeople = peopleApiClient.getAllPeople();
-        String peopleBody = EntityUtils.toString(getPeople.getEntity());
-
-        getOnePerson = peopleApiClient.getOnePerson();
-        String onePerson = EntityUtils.toString(getOnePerson.getEntity());
-
-        update = peopleApiClient.update();
-        String location = EntityUtils.toString(update.getEntity());
-
-        Assert.assertEquals(5,5);
-    }
+    
 
     @Test
 
-    public void getSinglePerson() throws Exception{
-        getOnePerson = peopleApiClient.getOnePerson();
-        String onePerson = EntityUtils.toString(getOnePerson.getEntity());
+    public void getWelcomeRequestTest() throws Exception{
 
-        String poraka = "Deni";
+       response = peopleApiClient.httpGet("https://people-api1.herokuapp.com");
+       String message = "Welcome to People API";
 
+       String body = EntityUtils.toString(response.getEntity());
+       JSONObject bodyAsObject = new JSONObject(body);
 
-        JSONObject bodyAsObject = new JSONObject(onePerson) ;
-        String message = bodyAsObject.get("person").toString();
-        JSONObject personData = new JSONObject(message);
-        String name = personData.get("name").toString();
+       String messageAsString = bodyAsObject.get("message").toString();
 
+       Assert.assertEquals(message,messageAsString);
 
     //sporeduvanje so JSONObject e polosh(selski)nacin
-        Assert.assertEquals(name,poraka);
+    }
 
+    public void getPeople(String url)throws Exception{
 
+        getPeople = peopleApiClient.httpGet("https://people-api1.herokuapp.com/api/people");
+        String body = EntityUtils.toString(getPeople.getEntity());
+        JSONObject bodyAsObject = new JSONObject(body);
+        String message = "List of people successfully fetched";
 
+        String messageAsString = bodyAsObject.get("message").toString();
 
-
+        Assert.assertEquals(message,messageAsString);
     }
 }
