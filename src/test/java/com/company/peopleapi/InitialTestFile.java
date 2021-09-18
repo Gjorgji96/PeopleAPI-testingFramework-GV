@@ -1,17 +1,31 @@
 package com.company.peopleapi;
 
 import com.company.PeopleApiClient;
+import com.company.payloads.PostNewPersonPayload;
+import com.company.requests.PostNewPersonRequest;
+import com.company.requests.UpdateLocationRequest;
+import com.company.responses.DeleteResponse;
+import com.company.responses.PostNewPersonResponse;
+import com.company.responses.UpdateLocationResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import  static com.company.utils.ConversionUtils.*;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
+
 public class InitialTestFile {
     PeopleApiClient   peopleApiClient = new PeopleApiClient();
     HttpResponse response;
     HttpResponse getPeople;
     HttpResponse getOnePerson;
-    HttpResponse update;
+    PostNewPersonPayload postNewPersonPayload = new PostNewPersonPayload();
+    PostNewPersonRequest postNewPersonRequest = new PostNewPersonRequest();
+
+    public InitialTestFile() throws Exception {
+    }
 
 
     @Test
@@ -61,54 +75,55 @@ public class InitialTestFile {
     @Test
     public void deletePersonTest()throws Exception{
 
-        response = peopleApiClient.httpDelete
-                ("https://people-api1.herokuapp.com/api/person/6144936f2723c70004cafd6c");
-        String body = EntityUtils.toString(response.getEntity());
-        JSONObject bodyAsObject = new JSONObject(body);
+       HttpResponse postResponse = peopleApiClient.httpPost("https://people-api1.herokuapp.com/api/person",
+               objectToJsonString(postNewPersonPayload.createNewPerson()));
+
+       String postResponseAsString = EntityUtils.toString(postResponse.getEntity());
+       PostNewPersonResponse postNewPersonResponse = jsonStringToObject
+               (postResponseAsString,PostNewPersonResponse.class);
+       String createdId = postNewPersonResponse.getPersonData().getId();
+       response=peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person" + createdId);
+       String body = EntityUtils.toString(response.getEntity());
+//       DeleteResponse deleteResponse;
+//       deleteResponse = jsonStringToObject(body,DeleteResponse.class);
+//       Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
 
 
-        String message = "Person with id=6144936f2723c70004cafd6c has been succesfully deleted";
-        String messageAsString = bodyAsObject.get("message").toString();
 
-        Assert.assertEquals(message,messageAsString);
     }
 
     @Test
 
     public void getPostPersonTest() throws Exception{
 
-        JSONObject payload = new JSONObject();
-        payload.put("name","gjorgji");
-        payload.put("surname","papito");
-        payload.put("age", 24);
-        payload.put("isEmployed", true);
-        payload.put("location", "Skopje");
-
-        response = peopleApiClient.httpPost("https://people-api1.herokuapp.com/api/person",payload);
+        postNewPersonRequest= postNewPersonPayload.createNewPerson();
+        String newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
+        response = peopleApiClient.httpPost
+                ("https://people-api1.herokuapp.com/api/person",newPersonPayloadAsString);
         String body = EntityUtils.toString(response.getEntity());
-        JSONObject bodyAsObject = new JSONObject(body);
-        String message = "Person succesfully inserted";
+        PostNewPersonResponse postNewPersonResponse;
+        postNewPersonResponse = jsonStringToObject(body,PostNewPersonResponse.class);
 
-        String messageAsString = bodyAsObject.get("message").toString();
+        Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_CREATED);
 
-        Assert.assertEquals(message,messageAsString);
 
     }
 
     @Test
     public void putLocationTest()throws Exception{
 
-        JSONObject bodyAsObject = new JSONObject();
-        bodyAsObject.put("location","Island");
-        response=peopleApiClient.httpPut
-                ("https://people-api1.herokuapp.com/api/person/613f3cc8efc41e00046091c5",bodyAsObject);
-
+        UpdateLocationRequest updateLocationRequest = UpdateLocationRequest.builder()
+                .location("Genoa-.no19")
+                .build();
+        String updateLocationAsString = objectToJsonString(updateLocationRequest);
+        response = peopleApiClient.httpPut
+                ("https://people-api1.herokuapp.com/api/person/614632f4ef846100040ed678",updateLocationAsString);
         String body = EntityUtils.toString(response.getEntity());
-        JSONObject message = new JSONObject(body);
-        String poraka = "Person's location succesfully updated !";
-        String messageAsString = message.get("message").toString();
+        UpdateLocationResponse updateLocationResponse;
+        updateLocationResponse = jsonStringToObject(body,UpdateLocationResponse.class);
 
-        Assert.assertEquals(poraka,messageAsString);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
+
 
     }
 }
