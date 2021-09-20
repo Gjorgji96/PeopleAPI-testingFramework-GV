@@ -113,11 +113,11 @@ public class InitialTestFile {
     public void putLocationTest()throws Exception{
 
         UpdateLocationRequest updateLocationRequest = UpdateLocationRequest.builder()
-                .location("Genoa-.no19")
+                .location("Akademija Pandev")
                 .build();
         String updateLocationAsString = objectToJsonString(updateLocationRequest);
         response = peopleApiClient.httpPut
-                ("https://people-api1.herokuapp.com/api/person/614632f4ef846100040ed678",updateLocationAsString);
+                ("https://people-api1.herokuapp.com/api/person/613f3cc8efc41e00046091c5",updateLocationAsString);
         String body = EntityUtils.toString(response.getEntity());
         UpdateLocationResponse updateLocationResponse;
         updateLocationResponse = jsonStringToObject(body,UpdateLocationResponse.class);
