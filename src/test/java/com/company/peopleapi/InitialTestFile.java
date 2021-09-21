@@ -3,10 +3,9 @@ package com.company.peopleapi;
 import com.company.PeopleApiClient;
 import com.company.payloads.PostNewPersonPayload;
 import com.company.requests.PostNewPersonRequest;
-import com.company.requests.UpdateLocationRequest;
-import com.company.responses.DeleteResponse;
+import com.company.requests.PutRequest;
 import com.company.responses.PostNewPersonResponse;
-import com.company.responses.UpdateLocationResponse;
+import com.company.responses.PutRequestResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -110,17 +109,17 @@ public class InitialTestFile {
     }
 
     @Test
-    public void putLocationTest()throws Exception{
+    public void putRequestTest()throws Exception{
 
-        UpdateLocationRequest updateLocationRequest = UpdateLocationRequest.builder()
+        PutRequest putRequest = PutRequest.builder()
                 .location("Akademija Pandev")
                 .build();
-        String updateLocationAsString = objectToJsonString(updateLocationRequest);
+        String updateLocationAsString = objectToJsonString(putRequest);
         response = peopleApiClient.httpPut
                 ("https://people-api1.herokuapp.com/api/person/613f3cc8efc41e00046091c5",updateLocationAsString);
         String body = EntityUtils.toString(response.getEntity());
-        UpdateLocationResponse updateLocationResponse;
-        updateLocationResponse = jsonStringToObject(body,UpdateLocationResponse.class);
+        PutRequestResponse putRequestResponse;
+        putRequestResponse = jsonStringToObject(body, PutRequestResponse.class);
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
 

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-public class UpdateLocationResponse {
+public class PutRequestResponse {
 
     private String code;
     private String message;

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
 
-public class UpdateLocationRequest {
+public class PutRequest {
 
     private String name;
     private String surname;
