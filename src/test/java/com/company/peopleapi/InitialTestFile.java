@@ -4,6 +4,7 @@ import com.company.PeopleApiClient;
 import com.company.payloads.PostNewPersonPayload;
 import com.company.requests.PostNewPersonRequest;
 import com.company.requests.PutRequest;
+import com.company.responses.GetAllPeopleResponse;
 import com.company.responses.PostNewPersonResponse;
 import com.company.responses.PutRequestResponse;
 import org.apache.http.HttpResponse;
@@ -18,7 +19,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 public class InitialTestFile {
     PeopleApiClient   peopleApiClient = new PeopleApiClient();
     HttpResponse response;
-    HttpResponse getPeople;
     HttpResponse getOnePerson;
     PostNewPersonPayload postNewPersonPayload = new PostNewPersonPayload();
     PostNewPersonRequest postNewPersonRequest = new PostNewPersonRequest();
@@ -46,14 +46,17 @@ public class InitialTestFile {
     @Test
     public void getPeopleTest()throws Exception{
 
-        getPeople = peopleApiClient.httpGet("https://people-api1.herokuapp.com/api/people");
-        String body = EntityUtils.toString(getPeople.getEntity());
-        JSONObject bodyAsObject = new JSONObject(body);
-        String message = "List of people successfully fetched";
+        response = peopleApiClient.httpGet("https://people-api1.herokuapp.com/api/people");
+        String body = EntityUtils.toString(response.getEntity());
 
-        String messageAsString = bodyAsObject.get("message").toString();
+        GetAllPeopleResponse getAllPeopleResponse =  jsonStringToObject(body,GetAllPeopleResponse.class);
 
-        Assert.assertEquals(message,messageAsString);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
+        Assert.assertEquals(getAllPeopleResponse.getCode(),"P200");
+        Assert.assertEquals(getAllPeopleResponse.getNumberOfPeople(),32);
+
+
+
     }
 
     @Test
@@ -93,7 +96,7 @@ public class InitialTestFile {
 
     @Test
 
-    public void getPostPersonTest() throws Exception{
+    public void PostPersonTest() throws Exception{
 
         postNewPersonRequest= postNewPersonPayload.createNewPerson();
         String newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
