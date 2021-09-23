@@ -53,7 +53,7 @@ public class InitialTestFile {
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
         Assert.assertEquals(getAllPeopleResponse.getCode(),"P200");
-        Assert.assertEquals(getAllPeopleResponse.getNumberOfPeople(),32);
+        Assert.assertEquals(getAllPeopleResponse.getNumberOfPeople(),40);
 
 
 
@@ -71,26 +71,6 @@ public class InitialTestFile {
         String messageAsString = bodyAsObject.get("message").toString();
 
         Assert.assertEquals(message,messageAsString);
-
-    }
-
-    @Test
-    public void deletePersonTest()throws Exception{
-
-       HttpResponse postResponse = peopleApiClient.httpPost("https://people-api1.herokuapp.com/api/person",
-               objectToJsonString(postNewPersonPayload.createNewPerson()));
-
-       String postResponseAsString = EntityUtils.toString(postResponse.getEntity());
-       PostNewPersonResponse postNewPersonResponse = jsonStringToObject
-               (postResponseAsString,PostNewPersonResponse.class);
-       String createdId = postNewPersonResponse.getPersonData().getId();
-       response=peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person" + createdId);
-       String body = EntityUtils.toString(response.getEntity());
-//       DeleteResponse deleteResponse;
-//       deleteResponse = jsonStringToObject(body,DeleteResponse.class);
-//       Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
-
-
 
     }
 
@@ -115,7 +95,7 @@ public class InitialTestFile {
     public void putRequestTest()throws Exception{
 
         PutRequest putRequest = PutRequest.builder()
-                .location("Akademija Pandev")
+                .location("FKMGJP")
                 .build();
         String updateLocationAsString = objectToJsonString(putRequest);
         response = peopleApiClient.httpPut
