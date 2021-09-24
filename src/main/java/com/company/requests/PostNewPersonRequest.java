@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 public class PostNewPersonRequest {
     private String name;
     private String surname;
-    private int age;
+    private Integer age;
     @JsonProperty("isEmployed")
-    private boolean isEmployed;
+    private Boolean isEmployed;
     private String location;
 }
