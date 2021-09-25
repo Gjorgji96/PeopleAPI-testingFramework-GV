@@ -3,8 +3,10 @@ package com.company.peopleapi;
 import com.company.PeopleApiClient;
 import com.company.payloads.PostNewPersonPayload;
 import com.company.requests.PostNewPersonRequest;
+import com.company.responses.DeleteResponse;
 import com.company.responses.PostNewPersonResponse;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -23,6 +25,9 @@ public class PostNewPersonTest {
     PostNewPersonRequest postNewPersonRequest = new PostNewPersonRequest();
     String newPersonPayloadAsString;
     PostNewPersonResponse postNewPersonResponse;
+    String person1ID;
+    String person2ID;
+    String person3ID;
 
     public PostNewPersonTest() throws Exception {
     }
@@ -46,6 +51,7 @@ public class PostNewPersonTest {
                 ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+        person1ID = postNewPersonResponse.getPersonData().getId();
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
         Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
@@ -67,6 +73,7 @@ public class PostNewPersonTest {
                 ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+        person2ID = postNewPersonResponse.getPersonData().getId();
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
         Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
         Assert.assertEquals(postNewPersonResponse.getMessage(), "Person succesfully inserted");
@@ -85,6 +92,7 @@ public class PostNewPersonTest {
                 ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+        person3ID = postNewPersonResponse.getPersonData().getId();
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
         Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
         Assert.assertEquals(postNewPersonResponse.getMessage(), "Person succesfully inserted");
@@ -173,12 +181,23 @@ public class PostNewPersonTest {
 
 
     @AfterClass
-    public void afterCLass() {
+    public void afterCLass() throws Exception {
+        HttpResponse deletingPerson1 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person1ID);
+        Assert.assertEquals(deletingPerson1.getStatusLine().getStatusCode(), SC_OK);
 
+        HttpResponse deletingPerson2 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person2ID);
+        Assert.assertEquals(deletingPerson2.getStatusLine().getStatusCode(), SC_OK);
+
+        HttpResponse deletingPerson3 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person3ID);
+        Assert.assertEquals(deletingPerson3.getStatusLine().getStatusCode(), SC_OK);
     }
+
 
     @AfterTest
     public void afterTest() {
+
+
+
 
     }
 
