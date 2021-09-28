@@ -1,7 +1,6 @@
 package com.company.payloads;
 
 import com.company.requests.PostNewPersonRequest;
-import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 
 
