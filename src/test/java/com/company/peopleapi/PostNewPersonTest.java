@@ -75,7 +75,6 @@ public class PostNewPersonTest {
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
         Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
         Assert.assertEquals(postNewPersonResponse.getMessage(), "Person succesfully inserted");
-        ;
         Assert.assertEquals(postNewPersonResponse.getPersonData().getLocation(), postNewPersonRequest.getLocation());
 
 

@@ -1,7 +1,9 @@
 package com.company.payloads;
 
 import com.company.requests.PostNewPersonRequest;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+
 
 public class PostNewPersonPayload {
 
@@ -25,13 +27,6 @@ public class PostNewPersonPayload {
         return isEmployed;
     }
 
-    public JSONObject createNewPersonPayloadNameAndSurnameAsString() {
-        JSONObject isEmployed = new JSONObject();
-        isEmployed.put("name", 40);
-        isEmployed.put("surname", 40);
-        isEmployed.put("isEmployed", "ne sum vraboten");
-        isEmployed.put("age", 40);
-        isEmployed.put("location", "vardar");
-        return isEmployed;
+
     }
-}
+

@@ -2,7 +2,6 @@ package com.company.peopleapi;
 
 import com.company.PeopleApiClient;
 import com.company.payloads.PostNewPersonPayload;
-import com.company.requests.PostNewPersonRequest;
 import com.company.responses.PostNewPersonResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -20,7 +19,6 @@ public class DeletePersonFeatureTest{
         PeopleApiClient peopleApiClient = new PeopleApiClient();
         HttpResponse response;
         PostNewPersonPayload postNewPersonPayload = new PostNewPersonPayload();
-        PostNewPersonRequest postNewPersonRequest = new PostNewPersonRequest();
         String createdID;
 
 
