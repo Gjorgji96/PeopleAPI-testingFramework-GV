@@ -18,11 +18,6 @@ import lombok.NoArgsConstructor;
 
 public class PutRequest {
 
-    private String name;
-    private String surname;
-    private int age;
-    @JsonProperty("isEmployed")
-    private boolean isEmployed;
     private String location;
 
 

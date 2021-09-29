@@ -20,5 +20,5 @@ public class PutRequestResponse {
 
     private String code;
     private String message;
-    private PersonData personData;
+    private PersonData person;
 }
