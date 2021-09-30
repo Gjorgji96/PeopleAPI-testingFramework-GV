@@ -19,16 +19,6 @@ public class FetchAllPeopleTest {
 
     }
 
-    @BeforeClass
-    public void beforeClass() {
-
-    }
-
-    @BeforeTest
-    public void beforeTest() {
-
-    }
-
     @Test
     public void positiveFetchAllPeopleTest() throws Exception {
 
@@ -55,17 +45,6 @@ public class FetchAllPeopleTest {
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_OK);
         Assert.assertEquals(getAllPeopleResponse.getPeopleData().size(), getAllPeopleResponse.getNumberOfPeople());
 
-    }
-
-    @AfterClass
-        public void afterClass () {
         }
-
-        @AfterTest
-        public void afterTest () {
-
-        }
-
-
     }
 

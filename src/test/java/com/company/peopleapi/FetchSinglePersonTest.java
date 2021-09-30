@@ -39,10 +39,6 @@ public class FetchSinglePersonTest {
 
 
     }
-    @BeforeTest
-    public void beforeTest(){
-
-    }
     @Test
     public void correctIdTest() throws Exception{
 
@@ -74,10 +70,6 @@ public class FetchSinglePersonTest {
     public void afterClass() throws Exception{
         response = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + personId);
         Assert.assertEquals(response.getStatusLine().getStatusCode(),SC_OK);
-
-    }
-    @AfterTest
-    public void afterTest(){
 
     }
 }

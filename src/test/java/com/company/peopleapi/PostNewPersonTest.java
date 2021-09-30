@@ -30,17 +30,6 @@ public class PostNewPersonTest {
     public PostNewPersonTest() throws Exception {
     }
 
-    @BeforeClass
-    public void beforeClass() throws Exception {
-
-
-    }
-
-    @BeforeTest
-    public void beforeTest() {
-
-    }
-
     @Test
     public void Positive1Test() throws Exception {
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
@@ -187,15 +176,6 @@ public class PostNewPersonTest {
 
         HttpResponse deletingPerson3 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person3ID);
         Assert.assertEquals(deletingPerson3.getStatusLine().getStatusCode(), SC_OK);
-    }
-
-
-    @AfterTest
-    public void afterTest() {
-
-
-
-
     }
 
 }

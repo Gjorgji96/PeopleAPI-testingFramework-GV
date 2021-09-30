@@ -116,11 +116,6 @@ public class PutLocationTest {
 
     }
 
-    @Test
-    public void emptyPayloadTest() throws Exception {
-
-    }
-
     @AfterClass
     public void afterClass() throws Exception {
          delete = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + createdID);
