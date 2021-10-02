@@ -1,28 +1,25 @@
 package com.company.peopleapi;
 
-import com.company.PeopleApiClient;
-import com.company.payloads.PostNewPersonPayload;
-import com.company.requests.PostNewPersonRequest;
+import com.company.base.TestBasePostNewPerson;
 import com.company.responses.PostNewPersonResponse;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.apache.http.util.EntityUtils;
 import org.testng.annotations.*;
 
+import static com.company.config.EndPointConfig.POST_ENDPOINT;
+import static com.company.config.EndPointConfig.PUT_ENDPOINT;
+import static com.company.config.HostNameConfig.HOST_NAME;
 import static com.company.utils.ConversionUtils.objectToJsonString;
 import static com.company.utils.ConversionUtils.jsonStringToObject;
+import static com.company.utils.TestDataUtils.ResponseMessage.*;
+import static com.company.utils.TestDataUtils.ResponseCode.*;
 import static org.apache.http.HttpStatus.*;
 
-public class PostNewPersonTest {
+public class PostNewPersonTest extends TestBasePostNewPerson {
 
-    PeopleApiClient peopleApiClient = new PeopleApiClient();
-    HttpResponse response;
-    PostNewPersonPayload postNewPersonPayload = new PostNewPersonPayload();
-    PostNewPersonRequest postNewPersonRequest = new PostNewPersonRequest();
-    String newPersonPayloadAsString;
-    PostNewPersonResponse postNewPersonResponse;
+
     String person1ID;
     String person2ID;
     String person3ID;
@@ -34,15 +31,18 @@ public class PostNewPersonTest {
     public void Positive1Test() throws Exception {
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
         newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
+
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
+                (HOST_NAME + POST_ENDPOINT, newPersonPayloadAsString);
+
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+
         person1ID = postNewPersonResponse.getPersonData().getId();
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
-        Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
-        Assert.assertEquals(postNewPersonResponse.getMessage(), "Person succesfully inserted");
+        Assert.assertEquals(postNewPersonResponse.getCode(), CREATED);
+        Assert.assertEquals(postNewPersonResponse.getMessage(), PERSON_SUCCESSFULLY_INSERTED);
         Assert.assertEquals(postNewPersonResponse.getPersonData().getName(), postNewPersonRequest.getName());
         Assert.assertEquals(postNewPersonResponse.getPersonData().getSurname(), postNewPersonRequest.getSurname());
         Assert.assertEquals(postNewPersonResponse.getPersonData().getAge(), postNewPersonRequest.getAge());
@@ -55,15 +55,19 @@ public class PostNewPersonTest {
     public void positiveTestWithoutLocation() throws Exception {
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
         postNewPersonRequest.setLocation(null);
+
         newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
+                (HOST_NAME + POST_ENDPOINT, newPersonPayloadAsString);
+
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+
         person2ID = postNewPersonResponse.getPersonData().getId();
+
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
-        Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
-        Assert.assertEquals(postNewPersonResponse.getMessage(), "Person succesfully inserted");
+        Assert.assertEquals(postNewPersonResponse.getCode(), CREATED);
+        Assert.assertEquals(postNewPersonResponse.getMessage(), PERSON_SUCCESSFULLY_INSERTED);
         Assert.assertEquals(postNewPersonResponse.getPersonData().getLocation(), postNewPersonRequest.getLocation());
 
 
@@ -73,15 +77,19 @@ public class PostNewPersonTest {
     public void positiveTestWithoutAge() throws Exception {
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
         postNewPersonRequest.setAge(null);
+
         newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
+                (HOST_NAME + POST_ENDPOINT, newPersonPayloadAsString);
+
         String body = EntityUtils.toString(response.getEntity());
+
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
         person3ID = postNewPersonResponse.getPersonData().getId();
+
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_CREATED);
-        Assert.assertEquals(postNewPersonResponse.getCode(), "P201");
-        Assert.assertEquals(postNewPersonResponse.getMessage(), "Person succesfully inserted");
+        Assert.assertEquals(postNewPersonResponse.getCode(), CREATED);
+        Assert.assertEquals(postNewPersonResponse.getMessage(), PERSON_SUCCESSFULLY_INSERTED);
         Assert.assertNull(postNewPersonResponse.getPersonData().getAge());
 
 
@@ -91,14 +99,16 @@ public class PostNewPersonTest {
     public void negativeTestWithoutName() throws Exception {
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
         postNewPersonRequest.setName(null);
+
         newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
+                (HOST_NAME + POST_ENDPOINT, newPersonPayloadAsString);
         String body = EntityUtils.toString(response.getEntity());
+
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_BAD_REQUEST);
-        Assert.assertEquals(postNewPersonResponse.getCode(), "P400");
-        Assert.assertEquals(postNewPersonResponse.getMessage(), "Person's name cannot be empty");
+        Assert.assertEquals(postNewPersonResponse.getCode(), BADREQUEST);
+        Assert.assertEquals(postNewPersonResponse.getMessage(), NO_NAME);
 
 
 
@@ -107,14 +117,17 @@ public class PostNewPersonTest {
     public void negativeTestWithoutSurname() throws Exception{
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
         postNewPersonRequest.setSurname(null);
+
         newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
+                (HOST_NAME + POST_ENDPOINT, newPersonPayloadAsString);
+
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_BAD_REQUEST);
-        Assert.assertEquals(postNewPersonResponse.getCode(), "P400");
-        Assert.assertEquals(postNewPersonResponse.getMessage(), "Person's surname cannot be empty");
+        Assert.assertEquals(postNewPersonResponse.getCode(), BADREQUEST);
+        Assert.assertEquals(postNewPersonResponse.getMessage(), NO_SURNAME);
 
 
     }
@@ -122,14 +135,17 @@ public class PostNewPersonTest {
     public void negativeTestWithoutJob () throws Exception{
         postNewPersonRequest = postNewPersonPayload.createNewPerson();
         postNewPersonRequest.setIsEmployed(null);
+
         newPersonPayloadAsString = objectToJsonString(postNewPersonRequest);
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", newPersonPayloadAsString);
+                (HOST_NAME + POST_ENDPOINT, newPersonPayloadAsString);
+
         String body = EntityUtils.toString(response.getEntity());
         postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
+
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_BAD_REQUEST);
-        Assert.assertEquals(postNewPersonResponse.getCode(), "P400");
-        Assert.assertEquals(postNewPersonResponse.getMessage(), "Person must provide if he is employed or not");
+        Assert.assertEquals(postNewPersonResponse.getCode(),BADREQUEST );
+        Assert.assertEquals(postNewPersonResponse.getMessage(), EMPTY_EMPLOYED_FIELD);
 
     }
 
@@ -138,9 +154,11 @@ public class PostNewPersonTest {
         JSONObject isEmployed = postNewPersonPayload.createNewPersonPayloadEmployedAsString();
         isEmployed.toString();
         String expectedMessage = "Person validation failed: isEmployed:";
+
         response = peopleApiClient.httpPost
-                ("https://people-api1.herokuapp.com/api/person", isEmployed.toString());
+                (HOST_NAME + POST_ENDPOINT, isEmployed.toString());
         String body = EntityUtils.toString(response.getEntity());
+
         JSONObject bodyAsObject = new JSONObject(body);
         String messageAsString = bodyAsObject.get("message").toString();
         Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_INTERNAL_SERVER_ERROR);
@@ -148,33 +166,17 @@ public class PostNewPersonTest {
         Assert.assertEquals(true,passes);
 
 
-
     }
-    //this test doesnt work because of a bug
-
-//    @Test
-//    public void negativeTestWithWrongNameAndSurnameINput() throws Exception{
-//        JSONObject isEmployed = postNewPersonPayload.createNewPersonPayloadNameAndSurnameAsString();
-//        isEmployed.toString();
-//        response = peopleApiClient.httpPost
-//                ("https://people-api1.herokuapp.com/api/person", isEmployed.toString());
-//        String body = EntityUtils.toString(response.getEntity());
-//        postNewPersonResponse = jsonStringToObject(body, PostNewPersonResponse.class);
-//        Assert.assertEquals(response.getStatusLine().getStatusCode(), SC_INTERNAL_SERVER_ERROR);
-//        Assert.assertEquals(postNewPersonResponse.getCode(), "P500");
-//        Assert.assertEquals(postNewPersonResponse.getMessage(),
-//                "Person must provide if he is employed or not");
-
 
     @AfterClass
     public void afterCLass() throws Exception {
-        HttpResponse deletingPerson1 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person1ID);
+        HttpResponse deletingPerson1 = peopleApiClient.httpDelete(HOST_NAME + PUT_ENDPOINT + person1ID);
         Assert.assertEquals(deletingPerson1.getStatusLine().getStatusCode(), SC_OK);
 
-        HttpResponse deletingPerson2 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person2ID);
+        HttpResponse deletingPerson2 = peopleApiClient.httpDelete(HOST_NAME + PUT_ENDPOINT + person2ID);
         Assert.assertEquals(deletingPerson2.getStatusLine().getStatusCode(), SC_OK);
 
-        HttpResponse deletingPerson3 = peopleApiClient.httpDelete("https://people-api1.herokuapp.com/api/person/" + person3ID);
+        HttpResponse deletingPerson3 = peopleApiClient.httpDelete(HOST_NAME + PUT_ENDPOINT + person3ID);
         Assert.assertEquals(deletingPerson3.getStatusLine().getStatusCode(), SC_OK);
     }
 
